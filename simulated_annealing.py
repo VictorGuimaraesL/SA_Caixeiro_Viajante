@@ -3,14 +3,14 @@ import random
 import math
 
 
-def calcular_distancia_total(rota, distancias):
+def calcular_distancia_total(rota, distancias): #Função que calcula a distância total de uma rota
     total = 0
     n = len(rota)
     for i in range(n):
         total += distancias[rota[i], rota[(i + 1) % n]] 
     return total
 
-def simulated_annealing_tsp(distancias, initial_temp=50000, cooling_rate=0.9995, max_iter=100000):
+def simulated_annealing_tsp(distancias, initial_temp=50000, cooling_rate=0.9995, max_iter=100000): #Função que aplica o Simulated Annealing
     n_cidades = len(distancias)
     rota_atual = list(range(n_cidades))
     random.shuffle(rota_atual)
@@ -21,7 +21,7 @@ def simulated_annealing_tsp(distancias, initial_temp=50000, cooling_rate=0.9995,
     
     temperatura = initial_temp
     
-    for i in range(max_iter):
+    for i in range(max_iter): #Gera uma rota ao trocar duas cidades aleatórias da rota atual
         nova_rota = rota_atual.copy()
         a, b = random.sample(range(n_cidades), 2)
         nova_rota[a], nova_rota[b] = nova_rota[b], nova_rota[a]
@@ -29,15 +29,15 @@ def simulated_annealing_tsp(distancias, initial_temp=50000, cooling_rate=0.9995,
         
         delta_distancia = nova_distancia - distancia_atual
         
-        if delta_distancia < 0 or random.random() < math.exp(-delta_distancia / temperatura):
+        if delta_distancia < 0 or random.random() < math.exp(-delta_distancia / temperatura): #Critério de aceitação
             rota_atual = nova_rota
             distancia_atual = nova_distancia
             
-            if distancia_atual < melhor_distancia:
+            if distancia_atual < melhor_distancia: #Atualização da melhor rota
                 melhor_rota = rota_atual.copy()
                 melhor_distancia = distancia_atual
         
-        temperatura *= cooling_rate
+        temperatura *= cooling_rate #Resfriamento da temperatura
         
         if i % 10000 == 0:
             print(f"Iteração {i}: Temp = {temperatura:.6f}, Melhor Distância = {melhor_distancia}")
